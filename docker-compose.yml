@@ -1,0 +1,48 @@
+services:
+  app:
+    build:
+      context: .
+      target: development  # Use dependencies stage for development
+    container_name: next-app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.docker
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      db:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules/
+        - action: sync
+          path: ./prisma
+          target: /app/prisma
+        - action: rebuild
+          path: package.json
+    # Run migrations at runtime, not build time
+    command: sh -c "npx prisma db push && npm run dev"
+
+  db:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    restart: always
+    env_file:
+      - .env.docker
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
