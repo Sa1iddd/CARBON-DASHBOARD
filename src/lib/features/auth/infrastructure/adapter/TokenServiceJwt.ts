@@ -4,6 +4,7 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 
 export class JwtTokenService implements TokenService {
   sign(payload: object, options: SignOptions = { expiresIn: '1h' }): string {
+    // Biarkan jsonwebtoken yang handle iat secara otomatis
     return jwt.sign(payload, env.JWT_SECRET as string, options);
   }
 

@@ -1,10 +1,9 @@
-import {NextApiRequest, NextApiResponse} from 'next';
-import {JwtTokenService} from '@/lib/features/auth/infrastructure/adapter/TokenServiceJwt';
-import {mapError} from '@/lib/common/errors/errorMapper';
-
-const tokenService = new JwtTokenService();
+import { NextApiRequest, NextApiResponse } from 'next';
+import { JwtTokenService } from '@/lib/features/auth/infrastructure/adapter/TokenServiceJwt';
+import { logger } from '@/lib/common/logger/logger';
 
 export async function requireAuth(req: NextApiRequest, res: NextApiResponse) {
+  const tokenService = new JwtTokenService();
   try {
     const auth = req.headers.authorization?.replace('Bearer ', '');
     if (!auth) {
@@ -13,8 +12,8 @@ export async function requireAuth(req: NextApiRequest, res: NextApiResponse) {
     }
     return tokenService.verify<{ userId: string }>(auth);
   } catch (err) {
-    const mapped = mapError(err);
-    res.status(mapped.statusCode).json({ error: mapped.message });
+    logger.error(err);
+    res.status(401).json({ error: 'Unauthorized' });
     return null;
   }
 }

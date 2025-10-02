@@ -2,6 +2,7 @@ import { SessionRepository } from '../../domain/port/SessionRepository';
 import { TokenService } from '../../domain/port/TokenService';
 import { AppError } from '@/lib/common/errors/AppError';
 import { logger } from '@/lib/common/logger/logger';
+import { RefreshRequest } from '@/lib/features/auth/presentation/dto/RefreshTokenDto';
 
 export class RefreshTokenUseCase {
   constructor(
@@ -9,7 +10,7 @@ export class RefreshTokenUseCase {
     private tokenService: TokenService
   ) {}
 
-  async execute(refreshToken: string) {
+  async execute({ refreshToken }: RefreshRequest) {
     // verify signature
     try {
       const payload = this.tokenService.verify<{ userId: string }>(refreshToken);

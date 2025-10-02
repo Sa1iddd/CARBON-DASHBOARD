@@ -1,11 +1,15 @@
 import { UserRepository } from '../../domain/port/UserRepository';
 import { BcryptService } from '../../infrastructure/adapter/BcryptService';
 import { AuthDomainService } from '../../domain/service/AuthDomainService';
+import { RegisterRequest } from '@/lib/features/auth/presentation/dto/RegisterRequestDto';
 
 export class RegisterUserUseCase {
-  constructor(private userRepo: UserRepository, private bcrypt: BcryptService) {}
+  constructor(
+    private userRepo: UserRepository,
+    private bcrypt: BcryptService
+  ) {}
 
-  async execute(email: string, password: string, name?: string) {
+  async execute({ email, password, name }: RegisterRequest) {
     const domainService = new AuthDomainService(this.userRepo);
     await domainService.ensureEmailNotTaken(email);
 

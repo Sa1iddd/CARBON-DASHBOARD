@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { validate } from '@/lib/common/validation/validate';
 
 export const RegisterSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(6),
   name: z.string().optional(),
 });
