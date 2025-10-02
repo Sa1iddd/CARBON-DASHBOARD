@@ -1,31 +1,49 @@
-import {Prisma, PrismaClient} from '@prisma/client';
-import {logger} from '@/lib/common/logger/logger';
+import { Prisma, PrismaClient } from '@/generated/prisma';
+import { logger } from '@/lib/common/logger/logger';
+import { withAccelerate } from '@prisma/extension-accelerate';
 
-type LogEvents = 'query' | 'info' | 'warn' | 'error';
+const globalForPrisma = global as unknown as {
+  prisma?: PrismaClient;
+};
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient<Prisma.PrismaClientOptions, LogEvents> };
-
-export const prisma =
+const basePrisma =
   globalForPrisma.prisma ||
-  new PrismaClient<Prisma.PrismaClientOptions, LogEvents>({
+  new PrismaClient({
     log: [
-      { level: 'query', emit: 'event' },
-      { level: 'info', emit: 'event' },
-      { level: 'warn', emit: 'event' },
-      { level: 'error', emit: 'event' },
+      { emit: 'event', level: 'query' },
+      { emit: 'event', level: 'error' },
+      { emit: 'event', level: 'info' },
+      { emit: 'event', level: 'warn' },
     ],
   });
 
-prisma.$on('query', (e: Prisma.QueryEvent) => {
-  logger.info(`[Prisma Query] ${e.query} params=${e.params} duration=${e.duration}ms`);
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+basePrisma.$on('query', (e: Prisma.QueryEvent) => {
+  logger.debug(`Query: ${e.query} | Params: ${e.params} | Duration: ${e.duration}ms`);
 });
 
-prisma.$on('info', (e: Prisma.LogEvent) => logger.info(e.message));
-prisma.$on('warn', (e: Prisma.LogEvent) => logger.warn(e.message));
-prisma.$on('error', (e: Prisma.LogEvent) => logger.error(e.message));
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+basePrisma.$on('error', (e: Prisma.LogEvent) => {
+  logger.error(`[Prisma Error] ${e.message}`);
+});
 
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma;
-}
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+basePrisma.$on('warn', (e: Prisma.LogEvent) => {
+  logger.warn(`[Prisma Warning] ${e.message}`);
+});
 
-logger.info('✅ PrismaClient initialized with Winston logging only');
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+basePrisma.$on('info', (e: Prisma.LogEvent) => {
+  logger.info(`[Prisma Info] ${e.message}`);
+});
+
+// $extends dengan middleware misalnya
+const prisma = basePrisma.$extends(withAccelerate());
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = basePrisma;
+
+export default prisma;

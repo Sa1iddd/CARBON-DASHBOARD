@@ -1,6 +1,6 @@
-import {prisma} from '@/lib/common/database/PrismaClient';
-import {SessionRepository} from '@/lib/features/auth/domain/port/SessionRepository';
-import {Session} from '@prisma/client';
+import prisma from '@/lib/common/database/PrismaClient';
+import { SessionRepository } from '@/lib/features/auth/domain/port/SessionRepository';
+import { Session } from '@/generated/prisma';
 
 export class PrismaSessionRepository implements SessionRepository {
   async create(userId: string, refreshToken: string, expiresAt: Date): Promise<Session> {

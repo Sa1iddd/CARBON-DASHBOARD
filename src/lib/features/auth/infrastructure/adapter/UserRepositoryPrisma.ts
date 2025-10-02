@@ -1,6 +1,6 @@
-import { prisma } from '@/lib/common/database/PrismaClient';
+import prisma from '@/lib/common/database/PrismaClient';
 import { UserRepository } from '@/lib/features/auth/domain/port/UserRepository';
-import { User } from '@prisma/client';
+import { User } from '@/generated/prisma';
 
 export class PrismaUserRepository implements UserRepository {
   async create(email: string, passwordHash: string, name?: string): Promise<User> {

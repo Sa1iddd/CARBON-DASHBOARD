@@ -3,19 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
     "prisma:generate": "prisma generate",
-    "migrate:dev": "prisma migrate dev --name init && prisma generate"
+    "migrate:dev": "prisma migrate dev --name init && prisma generate",
+    "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix",
+    "format": "prettier --write 'src/**/*.{js,ts,tsx,json,css,scss,md}'",
+    "db:deploy": "npx --yes prisma migrate deploy && npx --yes prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "^6.16.2",
+    "@prisma/client": "^6.16.3",
+    "@prisma/extension-accelerate": "^2.0.2",
     "bcryptjs": "^3.0.2",
     "date-fns": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "next": "15.5.4",
+    "prop-types": "^15.8.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "winston": "^3.18.0",
@@ -32,7 +37,12 @@
     "@typescript-eslint/parser": "^8.45.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "prettier": "^3.5.3",
+    "prisma": "^6.16.3",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }

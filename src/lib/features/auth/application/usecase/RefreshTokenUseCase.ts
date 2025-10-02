@@ -1,9 +1,13 @@
-import {SessionRepository} from '../../domain/port/SessionRepository';
-import {TokenService} from '../../domain/port/TokenService';
-import {AppError} from '@/lib/common/errors/AppError';
+import { SessionRepository } from '../../domain/port/SessionRepository';
+import { TokenService } from '../../domain/port/TokenService';
+import { AppError } from '@/lib/common/errors/AppError';
+import { logger } from '@/lib/common/logger/logger';
 
 export class RefreshTokenUseCase {
-  constructor(private sessionRepo: SessionRepository, private tokenService: TokenService) {}
+  constructor(
+    private sessionRepo: SessionRepository,
+    private tokenService: TokenService
+  ) {}
 
   async execute(refreshToken: string) {
     // verify signature
@@ -20,6 +24,7 @@ export class RefreshTokenUseCase {
       const accessToken = this.tokenService.sign({ userId: session.userId }, { expiresIn: '15m' });
       return { accessToken };
     } catch (err) {
+      logger.error(err);
       throw new AppError('Invalid refresh token', 401);
     }
   }

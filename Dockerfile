@@ -1,51 +1,68 @@
-# Base image
-FROM node:18-alpine AS base
-WORKDIR /app
+ARG NODE_VERSION=22.19.0
+FROM node:${NODE_VERSION}-alpine as base
 
-# Install dependencies
-FROM base AS deps
-COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* ./
-RUN \
-  if [ -f package-lock.json ]; then npm ci; \
-  elif [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable && pnpm install --frozen-lockfile; \
-  else echo "No lockfile found." && exit 1; \
-  fi
+# Set working directory for all build stages.
+WORKDIR /usr/src/app
 
-# Development stage
-FROM base AS development
-COPY --from=deps /app/node_modules ./node_modules
+################################################################################
+# Development image with full source and devDependencies
+FROM base AS dev
+
+COPY package*.json ./
+RUN npm install
+
 COPY . .
-RUN npx prisma generate
+
 EXPOSE 3000
-CMD ["sh", "-c", "npx prisma db push && npm run dev"]
 
-# Build Next.js & generate Prisma client
-FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
+CMD ["npm", "run", "dev"]
+
+
+################################################################################
+# Create a stage for installing production dependecies.
+FROM base as deps
+# RUN apk add --no-cache libc6-compat
+
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev
+
+################################################################################
+FROM deps as build
+COPY .env.prod .env
+
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci
+
 COPY . .
-RUN npx prisma generate
+RUN npx --yes prisma generate
+
+# Build
 RUN npm run build
 
-# Production runner
-FROM node:18-alpine AS runner
+################################################################################
+# Create a new stage to run the application with minimal runtime dependencies
+# where the necessary files are copied from the build stage.
+FROM base as final
+
 ENV NODE_ENV=production
 
-# Non-root user
-RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
-WORKDIR /app
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+COPY --from=build /usr/src/app/public ./public
+COPY --from=build --chown=nextjs:nodejs /usr/src/app/.next/standalone ./
+COPY --from=build --chown=nextjs:nodejs /usr/src/app/.next/static ./.next/static
+COPY --from=build --chown=nextjs:nodejs /usr/src/app/node_modules/@prisma /usr/src/app/node_modules/@prisma
+COPY --from=build --chown=nextjs:nodejs /usr/src/app/src/generated /usr/src/app/src/generated
+
 USER nextjs
 
-# Copy build artifacts
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/next.config.ts ./
-COPY --from=builder /app/prisma ./prisma
-
-# Expose port
 EXPOSE 3000
 
-# Run migrations + start server at container runtime
-CMD ["sh", "-c", "npx prisma migrate deploy && node .next/standalone/server.js"]
+ENV PORT=3000
+
+CMD ["sh", "-c", "npm run db:deploy && HOSTNAME=0.0.0.0 node server.js"]

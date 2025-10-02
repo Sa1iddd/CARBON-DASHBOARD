@@ -1,4 +1,4 @@
-import { User as PrismaUser } from '@prisma/client';
+import { User as PrismaUser } from '@/generated/prisma';
 
 export function toPublicUser(u: PrismaUser) {
   return {

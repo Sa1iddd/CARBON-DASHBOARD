@@ -1,48 +1,92 @@
 services:
+  db:
+    image: postgres
+    hostname: postgres_db
+    container_name: postgres_db
+    restart: always
+    user: postgres
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=nextjs-template
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    env_file:
+      - .env.prod
+    ports:
+      - "5434:5432"
+    networks:
+      - prisma-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d nextjs-template" ]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    command: postgres -c listen_addresses='*'
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   app:
     build:
       context: .
-      target: development  # Use dependencies stage for development
     container_name: next-app
+    env_file:
+      - .env.prod
+    stdin_open: true
+    tty: true  # Keeps the container running for debugging
     ports:
       - "3000:3000"
-    env_file:
-      - .env.docker
-    environment:
-      - NODE_ENV=development
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - prisma-network
     develop:
       watch:
         - action: sync
           path: ./src
-          target: /app/src
+          target: /usr/src/app/src
           ignore:
             - node_modules/
         - action: sync
+          path: ./public
+          target: /usr/src/app/public
+        - action: sync
           path: ./prisma
-          target: /app/prisma
+          target: /usr/src/app/prisma
         - action: rebuild
           path: package.json
-    # Run migrations at runtime, not build time
-    command: sh -c "npx prisma db push && npm run dev"
+        - action: rebuild
+          path: package-lock.json
 
-  db:
-    image: postgres:15-alpine
-    container_name: postgres-db
-    restart: always
-    env_file:
-      - .env.docker
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    ports:
-      - "5433:5432"
+
+  prisma-studio:
+    image: node:lts-alpine3.17
+    working_dir: /usr/src/app
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - .:/usr/src/app
+    command: npx prisma studio --port 5555 --browser none
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env.prod
+    networks:
+      - prisma-network
+    depends_on:
+      db:
+        condition: service_healthy
+      app:
+        condition: service_started
 
+networks:
+  prisma-network:
+    name: prisma-network
 volumes:
-  pgdata:
+  db-data:
+secrets:
+  db-password:
+    file: db/password.txt
