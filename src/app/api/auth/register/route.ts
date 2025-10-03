@@ -1,6 +1,6 @@
-import {NextRequest, NextResponse} from 'next/server';
-import {parseRegister} from '@/lib/features/auth/presentation/dto/RegisterRequestDto';
-import {AuthContainer} from '@/lib/features/auth/AuthContainer';
+import { NextRequest, NextResponse } from 'next/server';
+import { parseRegister } from '@/lib/features/auth/presentation/dto/RegisterRequestDto';
+import { AuthContainer } from '@/lib/features/auth/AuthContainer';
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const { email, password, name } = parseRegister(body);
 
     const container = AuthContainer.getInstance();
-    const result = await container.registerUseCase.execute(email, password, name);
+    const result = await container.registerUseCase.execute({ email, password, name });
 
     return NextResponse.json(result, { status: 201 });
   } catch (err: any) {

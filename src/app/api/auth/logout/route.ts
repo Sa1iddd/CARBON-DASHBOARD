@@ -1,6 +1,6 @@
 // logout/route.ts
-import {NextRequest, NextResponse} from "next/server";
-import {AuthContainer} from "@/lib/features/auth/AuthContainer";
+import { NextRequest, NextResponse } from 'next/server';
+import { AuthContainer } from '@/lib/features/auth/AuthContainer';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,11 +11,10 @@ export async function POST(req: NextRequest) {
     const refreshToken = authHeader.split(' ')[1];
 
     const container = AuthContainer.getInstance();
-    await container.logoutUseCase.execute(refreshToken);
+    await container.logoutUseCase.execute({ refreshToken });
 
     return NextResponse.json({ message: 'Logged out' });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: err.statusCode || 500 });
   }
 }
-

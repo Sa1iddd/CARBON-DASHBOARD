@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const { refreshToken } = parseRefresh(body);
 
     const container = AuthContainer.getInstance();
-    const result = await container.refreshUseCase.execute(refreshToken);
+    const result = await container.refreshUseCase.execute({ refreshToken });
 
     return NextResponse.json(result);
   } catch (err: any) {

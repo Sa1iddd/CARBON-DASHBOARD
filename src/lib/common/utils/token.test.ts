@@ -1,5 +1,4 @@
 import { generateToken, verifyToken } from './token';
-import { env } from '../config/env';
 
 describe('token utils', () => {
   beforeAll(() => {

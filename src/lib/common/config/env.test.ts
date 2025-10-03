@@ -1,6 +1,3 @@
-import { z } from 'zod';
-import { env } from './env';
-
 describe('env config', () => {
   const OLD_ENV = process.env;
 

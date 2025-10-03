@@ -265,3 +265,8 @@
 [2025-10-03 14:30:24] [34mdebug[39m: [34mQuery: SELECT "public"."User"."id", "public"."User"."email", "public"."User"."passwordHash", "public"."User"."name", "public"."User"."role"::text, "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."email" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["fail@example.com",1,0] | Duration: 0ms[39m
 [2025-10-03 14:30:24] [34mdebug[39m: [34mQuery: DELETE FROM "public"."Session" WHERE 1=1 | Params: [] | Duration: 0ms[39m
 [2025-10-03 14:30:24] [34mdebug[39m: [34mQuery: DELETE FROM "public"."User" WHERE 1=1 | Params: [] | Duration: 0ms[39m
+[2025-10-03 14:38:09] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 9 connections.[39m
+[2025-10-03 14:38:09] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 9 connections.[39m
+[2025-10-03 14:38:09] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 9 connections.[39m
+[2025-10-03 14:38:09] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 9 connections.[39m
+[2025-10-03 14:38:10] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 9 connections.[39m

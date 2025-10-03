@@ -1,5 +1,4 @@
 import { BcryptService } from '@/lib/features/auth/infrastructure/adapter/BcryptService';
-import bcrypt from 'bcryptjs';
 
 describe('BcryptService', () => {
   let service: BcryptService;
