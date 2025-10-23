@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function StudentHousingForm() {
   return (
     <main className="min-h-screen bg-[#f2ecf9] py-8">
-      {/* Navbar (gabung di page) */}
+      {/* Navbar */}
       <div className="bg-white shadow-sm max-w-7xl mx-auto rounded-tl-xl rounded-tr-xl mb-0">
         <div className="flex justify-between items-center px-8 py-4">
           {/* Logo */}
@@ -23,31 +23,31 @@ export default function StudentHousingForm() {
           {/* Menu */}
           <nav className="flex gap-6 text-gray-700 font-medium">
             <Link href="#" className="hover:text-green-700 flex items-center gap-2">
-              <span>🏠</span> Home
+              <span>📊</span> Dashboard
             </Link>
             <Link href="#" className="hover:text-green-700 flex items-center gap-2">
-              ⚡ Electricity Bills
+              <span>📃</span> Tagihan Listrik
             </Link>
             <Link
               href="#"
               className="bg-green-100 text-green-700 px-4 py-1 rounded-md border border-green-300 flex items-center gap-2"
             >
-              🏡 Student Housing
+              <span>📋</span> Asrama Beasiswa
             </Link>
           </nav>
         </div>
       </div>
 
       {/* Form Section */}
-      <section className="bg-[#eaf5e1] p-10 rounded-bl-xl rounded-br-xl shadow-md max-w-7xl mx-auto">
+      <section className="bg-white p-10 rounded-bl-xl rounded-br-xl shadow-md max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8 text-black">
-          Student Housing Input
+          Pendataan Asrama Mahasiswa
         </h1>
 
         <form className="space-y-5">
           {/* Tahun */}
           <div className="flex items-center gap-4">
-            <label className="w-60 bg-[#a8c989] text-black font-semibold py-2 px-3 rounded-md text-center">
+            <label className="w-60 bg-white text-black font-semibold py-2 px-3 rounded-md text-left">
               Tahun
             </label>
             <select className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-gray-700">
@@ -62,7 +62,7 @@ export default function StudentHousingForm() {
 
           {/* Bulan */}
           <div className="flex items-center gap-4">
-            <label className="w-60 bg-[#a8c989] text-black font-semibold py-2 px-3 rounded-md text-center">
+            <label className="w-60 bg-white text-black font-semibold py-2 px-3 rounded-md text-left">
               Bulan
             </label>
             <select className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-gray-700">
@@ -88,7 +88,7 @@ export default function StudentHousingForm() {
 
           {/* Nama Asrama */}
           <div className="flex items-center gap-4">
-            <label className="w-60 bg-[#a8c989] text-black font-semibold py-2 px-3 rounded-md text-center">
+            <label className="w-60 bg-white text-black font-semibold py-2 px-3 rounded-md text-left">
               Nama Asrama
             </label>
             <select className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-gray-700">
@@ -102,7 +102,7 @@ export default function StudentHousingForm() {
           </div>
 
           {/* Jumlah Penghuni */}
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <label className="w-60 bg-[#a8c989] text-black font-semibold py-2 px-3 rounded-md text-center">
               Jumlah Penghuni
             </label>
@@ -116,11 +116,11 @@ export default function StudentHousingForm() {
               placeholder="L/P"
               className="w-24 border bg-white text-gray-700 border-gray-300 rounded-md p-2 text-center"
             />
-          </div>
+          </div> */}
 
           {/* Tagihan Listrik */}
           <div className="flex items-center gap-4">
-            <label className="w-60 bg-[#a8c989] text-black font-semibold py-2 px-3 rounded-md text-center">
+            <label className="w-60 bg-white text-black font-semibold py-2 px-3 rounded-md text-left">
               Tagihan Listrik (Rp/Bulan)
             </label>
 
@@ -136,7 +136,7 @@ export default function StudentHousingForm() {
             </div>
           </div>
 
-          {/* Grid Bawah */}
+          {/* Grid Bawah
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
             <div className="bg-[#a8c989] rounded-md p-4 text-center">
               <img src="/image/ikon1.png" alt="rumah-kwh" className="mx-auto mb-2" />
@@ -146,9 +146,9 @@ export default function StudentHousingForm() {
                 placeholder="VA"
                 className="w-full border border-gray-300 rounded-md p-2 text-center bg-white text-gray-700"
               />
-            </div>
+            </div> */}
 
-            <div className="bg-[#a8c989] rounded-md p-4 text-center">
+            {/* <div className="bg-[#a8c989] rounded-md p-4 text-center">
               <img src="/image/ikon2.png" alt="ikon2" className="mx-auto mb-2" />
               <p className="font-semibold text-black mb-2">
                 Konsumsi Listrik (kWh/Bulan)
@@ -171,12 +171,12 @@ export default function StudentHousingForm() {
                 className="w-full border border-gray-300 rounded-md p-2 text-center bg-white text-gray-700"
               />
             </div>
-          </div>
+          </div> */}
 
-          <div className="pt-0 text-right">
+          <div className="pt-5 text-center">
             <button
               type="button"
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-md transition"
+              className="bg-black hover:bg-green-700 text-white w-150 font-semibold px-2 py-2 rounded-md transition"
             >
               Simpan Data
             </button>
