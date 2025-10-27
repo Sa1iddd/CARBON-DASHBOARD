@@ -2,14 +2,56 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Calendar } from "lucide-react";
+import { useState } from "react";
 
 export default function StudentHousingForm() {
+  const [periode, setPeriode] = useState("");
+  const [dormOptions, setDormOptions] = useState([
+    "Limo",
+    "Kebon Nanas",
+    "An Nur",
+    "Haji Soleh 1",
+    "Sasak 2",
+    "Sasak 3",
+  ]);
+  const [selectedDorm, setSelectedDorm] = useState("");
+  const [newDorm, setNewDorm] = useState("");
+  const [showAddDorm, setShowAddDorm] = useState(false);
+
+  const handlePeriodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value; // format: YYYY-MM
+    const [year, month] = value.split("-");
+    const monthNames = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+    ];
+    const formatted = `${monthNames[parseInt(month) - 1]} ${year}`;
+    setPeriode(formatted);
+  };
+
+  const handleDormChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === "add-new") {
+      setShowAddDorm(true);
+    } else {
+      setSelectedDorm(value);
+    }
+  };
+
+  const handleAddDorm = () => {
+    if (newDorm.trim() === "") return;
+    setDormOptions([...dormOptions, newDorm]);
+    setSelectedDorm(newDorm);
+    setNewDorm("");
+    setShowAddDorm(false);
+  };
+
   return (
-    <main className="min-h-screen bg-[#f2ecf9] py-8">
+    <main className="min-h-screen bg-[#f2ecf9] py-8 flex flex-col justify-center items-center">
       {/* Navbar */}
-      <div className="bg-white shadow-sm max-w-7xl mx-auto rounded-tl-xl rounded-tr-xl mb-0">
+      <div className="bg-white shadow-sm w-full max-w-6xl mx-auto rounded-t-xl">
         <div className="flex justify-between items-center px-8 py-4">
-          {/* Logo */}
           <div className="flex items-center gap-4">
             <Image
               src="https://super.universitaspertamina.ac.id/wp-content/uploads/2025/07/logo_sc.png"
@@ -20,7 +62,6 @@ export default function StudentHousingForm() {
             />
           </div>
 
-          {/* Menu */}
           <nav className="flex gap-6 text-gray-700 font-medium">
             <Link href="#" className="hover:text-green-700 flex items-center gap-2">
               <span>📊</span> Dashboard
@@ -39,91 +80,85 @@ export default function StudentHousingForm() {
       </div>
 
       {/* Form Section */}
-      <section className="bg-white p-10 rounded-bl-xl rounded-br-xl shadow-md max-w-7xl mx-auto">
+      <section className="border-t-1 bg-white p-10 rounded-b-xl shadow-md w-full max-w-6xl mt-0 mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8 text-black">
           Pendataan Asrama Mahasiswa
         </h1>
 
-        <form className="space-y-5">
-          {/* Tahun */}
+        <form className="space-y-6">
+          {/* Periode */}
           <div className="flex items-center gap-4">
-            <label className="w-60 bg-white text-black font-semibold py-2 px-3 rounded-md text-left">
-              Tahun
+            <label className="w-60 text-black font-semibold py-2 px-3 text-left">
+              Periode
             </label>
-            <select className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-gray-700">
-              <option>Pilih Tahun</option>
-              {[2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].map(
-                (year) => (
-                  <option key={year}>{year}</option>
-                )
-              )}
-            </select>
-          </div>
-
-          {/* Bulan */}
-          <div className="flex items-center gap-4">
-            <label className="w-60 bg-white text-black font-semibold py-2 px-3 rounded-md text-left">
-              Bulan
-            </label>
-            <select className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-gray-700">
-              <option>Pilih Bulan</option>
-              {[
-                "Januari",
-                "Februari",
-                "Maret",
-                "April",
-                "Mei",
-                "Juni",
-                "Juli",
-                "Agustus",
-                "September",
-                "Oktober",
-                "November",
-                "Desember",
-              ].map((month) => (
-                <option key={month}>{month}</option>
-              ))}
-            </select>
+            <div className="relative flex-1">
+              <input
+                type="month"
+                onChange={handlePeriodeChange}
+                placeholder="Pilih Periode"
+                className="w-full border border-gray-300 rounded-md p-2 pl-3 pr-10 bg-white text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-500 appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+              />
+              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+            </div>
           </div>
 
           {/* Nama Asrama */}
           <div className="flex items-center gap-4">
-            <label className="w-60 bg-white text-black font-semibold py-2 px-3 rounded-md text-left">
+            <label className="w-60 text-black font-semibold py-2 px-3 text-left">
               Nama Asrama
             </label>
-            <select className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-gray-700">
-              <option>Pilih Nama Asrama</option>
-              {["Limo", "Kebon Nanas", "An Nur", "Haji Soleh 1", "Sasak 2", "Sasak 3"].map(
-                (name) => (
-                  <option key={name}>{name}</option>
-                )
-              )}
+            <select
+              className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-gray-700 focus:ring-2 focus:ring-green-500"
+              value={selectedDorm}
+              onChange={handleDormChange}
+            >
+              <option value="">Pilih Nama Asrama</option>
+              {dormOptions.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+              <option value="add-new" className="text-gray-700">
+                + Tambahkan Nama Asrama
+              </option>
             </select>
           </div>
 
-          {/* Jumlah Penghuni */}
-          {/* <div className="flex items-center gap-4">
-            <label className="w-60 bg-[#a8c989] text-black font-semibold py-2 px-3 rounded-md text-center">
-              Jumlah Penghuni
-            </label>
-            <input
-              type="number"
-              placeholder="Jumlah Penghuni Asrama"
-              className="flex-1 border border-gray-300 bg-white text-gray-700 rounded-md p-2"
-            />
-            <input
-              type="text"
-              placeholder="L/P"
-              className="w-24 border bg-white text-gray-700 border-gray-300 rounded-md p-2 text-center"
-            />
-          </div> */}
+          {/* Input Tambah Asrama Baru */}
+          {showAddDorm && (
+            <div className="flex items-center gap-4 animate-fadeIn">
+              <label className="w-60"></label>
+              <div className="flex-1 flex gap-2">
+                <input
+                  type="text"
+                  value={newDorm}
+                  onChange={(e) => setNewDorm(e.target.value)}
+                  placeholder="Masukkan nama asrama baru"
+                  className="w-full border border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:ring-2 focus:ring-green-500"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddDorm}
+                  className="bg-green-600 text-white px-4 rounded-md hover:bg-green-700 transition"
+                >
+                  Tambah
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAddDorm(false)}
+                  className="bg-gray-300 text-gray-700 px-4 rounded-md hover:bg-gray-400 transition"
+                >
+                  Batal
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Tagihan Listrik */}
           <div className="flex items-center gap-4">
-            <label className="w-60 bg-white text-black font-semibold py-2 px-3 rounded-md text-left">
+            <label className="w-60 text-black font-semibold py-2 px-3 text-left">
               Tagihan Listrik (Rp/Bulan)
             </label>
-
             <div className="flex-1 relative">
               <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-600">
                 Rp.
@@ -131,52 +166,23 @@ export default function StudentHousingForm() {
               <input
                 type="number"
                 placeholder="Masukkan jumlah tagihan"
-                className="w-full border border-gray-300 rounded-md p-2 pl-10 bg-white text-gray-700"
+                className="w-full border border-gray-300 rounded-md p-2 pl-10 bg-white text-gray-700 focus:ring-2 focus:ring-green-500"
               />
             </div>
           </div>
 
-          {/* Grid Bawah
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-            <div className="bg-[#a8c989] rounded-md p-4 text-center">
-              <img src="/image/ikon1.png" alt="rumah-kwh" className="mx-auto mb-2" />
-              <p className="font-semibold text-black mb-2">Daya yang Terpasang</p>
-              <input
-                type="number"
-                placeholder="VA"
-                className="w-full border border-gray-300 rounded-md p-2 text-center bg-white text-gray-700"
-              />
-            </div> */}
+          {/* Periode terpilih */}
+          {periode && (
+            <p className="text-green-700 font-medium text-center pt-2">
+              📅 Periode terpilih: <span className="font-semibold">{periode}</span>
+            </p>
+          )}
 
-            {/* <div className="bg-[#a8c989] rounded-md p-4 text-center">
-              <img src="/image/ikon2.png" alt="ikon2" className="mx-auto mb-2" />
-              <p className="font-semibold text-black mb-2">
-                Konsumsi Listrik (kWh/Bulan)
-              </p>
-              <input
-                type="number"
-                placeholder="kWh/Bulan"
-                className="w-full border border-gray-300 rounded-md p-2 text-center bg-white text-gray-700"
-              />
-            </div>
-
-            <div className="bg-[#a8c989] rounded-md p-4 text-center">
-              <img src="/image/ikon3.png" alt="ikon3" className="mx-auto mb-2" />
-              <p className="font-semibold text-black mb-2">
-                Total Emisi (Ton CO₂/Tahun)
-              </p>
-              <input
-                type="number"
-                placeholder="Ton CO₂/Tahun"
-                className="w-full border border-gray-300 rounded-md p-2 text-center bg-white text-gray-700"
-              />
-            </div>
-          </div> */}
-
-          <div className="pt-5 text-center">
+          {/* Tombol Simpan */}
+          <div className="pt-6 text-center">
             <button
               type="button"
-              className="bg-black hover:bg-green-700 text-white w-150 font-semibold px-2 py-2 rounded-md transition"
+              className="bg-black hover:bg-green-700 text-white font-semibold w-150 px-8 py-2 rounded-md transition duration-200"
             >
               Simpan Data
             </button>
