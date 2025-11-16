@@ -155,7 +155,7 @@ export default function StudentHousingForm() {
             {/* Tambah Asrama Baru */}
             {showAddDorm && (
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4 animate-fadeIn">
-                <label className="w-full md:w-60"></label>
+                <label className="w-full md:w-80 text-black font-semibold text-xl"></label>
                 <div className="flex-1 flex gap-2 w-full">
                   <input
                     type="text"
