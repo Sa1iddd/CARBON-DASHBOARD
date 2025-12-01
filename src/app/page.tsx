@@ -5,20 +5,51 @@ import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { useState } from "react";
 import { CheckCircle, XCircle } from "lucide-react";
+import { useEffect } from "react";
 
 export default function StudentHousingForm() {
   const [periode, setPeriode] = useState("");
-  const [dormOptions, setDormOptions] = useState([
-    "Limo",
-    "Kebon Nanas",
-    "An Nur",
-    "Haji Soleh 1",
-    "Sasak 2",
-    "Sasak 3",
-  ]);
+  const [dormOptions, setDormOptions] = useState<string[]>([]);
   const [selectedDorm, setSelectedDorm] = useState("");
   const [newDorm, setNewDorm] = useState("");
   const [showAddDorm, setShowAddDorm] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [newGender, setNewGender] = useState("PUTRA");
+  const [newCapacity, setNewCapacity] = useState("");
+  const [newPower, setNewPower] = useState("");
+
+
+  // contoh state untuk validasi (nanti bisa ganti sesuai input kamu)
+  const [kWh, setKWh] = useState("");
+  const [bill, setBill] = useState("");
+
+  useEffect(() => {
+  async function fetchDorms() {
+    try {
+      const res = await fetch("/api/dorm");
+
+      if (!res.ok) {
+        console.error("Failed to fetch dorms");
+        return;
+      }
+
+      const data = await res.json();
+
+      console.log("Dorm data from backend:", data);
+
+      const names = data.map((d: any) => d.name);
+
+      setDormOptions(names);
+    } catch (error) {
+      console.error("Fetch dorms error:", error);
+    }
+  }
+
+  fetchDorms();
+}, []);
+
 
   const handlePeriodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -40,52 +71,92 @@ export default function StudentHousingForm() {
     }
   };
 
-  const handleAddDorm = () => {
-    if (newDorm.trim() === "") return;
-    setDormOptions([...dormOptions, newDorm]);
-    setSelectedDorm(newDorm);
-    setNewDorm("");
-    setShowAddDorm(false);
+  const handleAddDorm = async () => {
+  if (!newDorm.trim() || !newGender || !newCapacity || !newPower) {
+    alert("Semua field asrama wajib diisi!");
+    return;
+  }
+
+  const payload = {
+    name: newDorm.trim(),
+    gender: newGender,
+    capacity: Number(newCapacity),
+    powerCapacity: Number(newPower)
   };
 
-  // 🟢 Tambahkan state baru untuk modal
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
+  try {
+    const res = await fetch("/api/dorm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
-  // contoh state untuk validasi (nanti bisa ganti sesuai input kamu)
-  const [kWh, setKWh] = useState("");
-  const [bill, setBill] = useState("");
+    if (!res.ok) {
+      console.error("Failed to add dorm");
+      return;
+    }
+
+    const created = await res.json();
+
+    // Update dropdown
+    setDormOptions(prev => [...prev, created.name]);
+    setSelectedDorm(created.name);
+
+    // Reset state
+    setNewDorm("");
+    setNewGender("PUTRA");
+    setNewCapacity("");
+    setNewPower("");
+
+    setShowAddDorm(false);
+
+  } catch (err) {
+    console.error("Add dorm error:", err);
+  }
+};
+
 
   // 🔘 Klik tombol simpan → buka modal konfirmasi
   const handleSaveClick = () => {
     setShowConfirm(true);
   };
 
-  // ✅ Jika user klik “Ya” di konfirmasi
-  const handleConfirmYes = () => {
-    try {
-      setShowConfirm(false);
+  const handleConfirmYes = async () => {
+  try {
+    setShowConfirm(false);
 
-    // validasi data kosong
+    // validasi
     if (!periode || !selectedDorm || !kWh || !bill) {
       setShowError(true);
       return;
     }
 
-    // kalau data lengkap
-    setShowSuccess(true);
+    // Kirim ke backend
+    const res = await fetch("/api/dorm-record", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        period: periode,
+        dormName: selectedDorm,
+        totalKwh: kWh,
+        billAmount: bill,
+      }),
+    });
 
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000)
-
-    } catch (error) {
-      setShowConfirm(false);
+    if (!res.ok) {
       setShowError(true);
+      return;
     }
-    
-  };
+
+    // Success
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
+
+  } catch (error) {
+    console.error(error);
+    setShowError(true);
+  }
+};
 
   return (
     <main className="min-h-screen w-full bg-[#f2ecf9] flex flex-col">
@@ -143,44 +214,100 @@ export default function StudentHousingForm() {
                 onChange={handleDormChange}
               >
                 <option value="">Pilih Nama Asrama</option>
-                {dormOptions.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))}
-                <option value="add-new">+ Tambahkan Nama Asrama</option>
-              </select>
-            </div>
+                  {dormOptions.map((name: string) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+            ))}
 
+            <option value="add-new">+ Tambahkan Nama Asrama</option>
+          </select>
+
+            </div>
             {/* Tambah Asrama Baru */}
             {showAddDorm && (
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-4 animate-fadeIn">
-                <label className="w-full md:w-80 text-black font-semibold text-xl"></label>
-                <div className="flex-1 flex gap-2 w-full">
-                  <input
-                    type="text"
-                    value={newDorm}
-                    onChange={(e) => setNewDorm(e.target.value)}
-                    placeholder="Masukkan nama asrama baru"
-                    className="w-full border border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:ring-2 focus:ring-green-300"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddDorm}
-                    className="bg-green-600 text-white px-4 rounded-md hover:bg-green-700 transition"
+              <div className="flex flex-col gap-4 p-4 bg-gray-50 border rounded-md animate-fadeIn">
+
+              {/* Nama Asrama */}
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                  <label className="w-full md:w-80 text-black font-semibold text-xl">
+                    Nama Asrama Baru
+                  </label>
+                    <input
+                      type="text"
+                      value={newDorm}
+                      onChange={(e) => setNewDorm(e.target.value)}
+                      placeholder="Contoh: Asrama Baru"
+                      className="flex-1 border border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:ring-2 focus:ring-green-300"
+                    />
+               </div>
+
+            {/* Gender */}
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                <label className="w-full md:w-80 text-black font-semibold text-xl">
+                  Gender Asrama
+                </label>
+                <select
+                  value={newGender}
+                  onChange={(e) => setNewGender(e.target.value)}
+                  className="flex-1 border border-gray-300 bg-white rounded-md p-2 text-gray-600 focus:ring-2 focus:ring-green-300"
                   >
-                    Tambah
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowAddDorm(false)}
-                    className="bg-gray-300 text-gray-700 px-4 rounded-md hover:bg-gray-400 transition"
-                  >
-                    Batal
-                  </button>
-                </div>
+                  <option value="PUTRA">PUTRA</option>
+                  <option value="PUTRI">PUTRI</option>
+                </select>
               </div>
-            )}
+
+            {/* Kapasitas */}
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                <label className="w-full md:w-80 text-black font-semibold text-xl">
+                  Kapasitas Penghuni
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={newCapacity}
+                  onChange={(e) => setNewCapacity(e.target.value)}
+                  placeholder="Contoh: 24"
+                  className="flex-1 border border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:ring-2 focus:ring-green-300"
+                />
+              </div>
+
+            {/* Power Capacity */}
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                <label className="w-full md:w-80 text-black font-semibold text-xl">
+                  Daya Listrik (VA)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={newPower}
+                  onChange={(e) => setNewPower(e.target.value)}
+                  placeholder="Contoh: 2200"
+                  className="flex-1 border border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:ring-2 focus:ring-green-300"
+                />
+              </div>
+
+            {/* Tombol */}
+              <div className="flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddDorm(false)}
+                  className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition"
+                >
+                  Batal
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleAddDorm}
+                  className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
+                >
+                  Simpan
+                </button>
+              </div>
+
+            </div>
+          )}
 
             {/* Total Konsumsi Listrik */}
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
