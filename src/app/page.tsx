@@ -8,8 +8,20 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { useEffect } from "react";
 
 export default function StudentHousingForm() {
+
+  type Dorm = {
+  id: string;
+  name: string;
+  gender: string;
+  capacity: number;
+  powerCapacity: number;
+  paymentType?: string;
+};
+
+  const [dormOptions, setDormOptions] = useState<Dorm[]>([]);
+  const [selectedDormId, setSelectedDormId] = useState("");
+  const [selectedDormDetail, setSelectedDormDetail] = useState<Dorm | null>(null);
   const [periode, setPeriode] = useState("");
-  const [dormOptions, setDormOptions] = useState<string[]>([]);
   const [selectedDorm, setSelectedDorm] = useState("");
   const [newDorm, setNewDorm] = useState("");
   const [showAddDorm, setShowAddDorm] = useState(false);
@@ -19,11 +31,35 @@ export default function StudentHousingForm() {
   const [newGender, setNewGender] = useState("PUTRA");
   const [newCapacity, setNewCapacity] = useState("");
   const [newPower, setNewPower] = useState("");
+  const selectedDormName =
+  dormOptions.find(d => d.id === selectedDormId)?.name || "";
 
 
-  // contoh state untuk validasi (nanti bisa ganti sesuai input kamu)
+  // validasi 
   const [kWh, setKWh] = useState("");
   const [bill, setBill] = useState("");
+  // ===== VALIDASI KONSUMSI LISTRIK =====
+  const HOURS_PER_DAY = 24;
+  const DAYS_PER_MONTH = 30;
+
+// batas kWh berdasarkan daya asrama
+const maxKwh =
+  selectedDormDetail
+    ? (selectedDormDetail.powerCapacity * HOURS_PER_DAY * DAYS_PER_MONTH) / 1000
+    : null;
+
+// validasi nilai kWh
+const isKwhValid =
+  kWh !== "" &&
+  !isNaN(Number(kWh)) &&
+  Number(kWh) > 0;
+
+// cek apakah kWh melewati batas wajar
+const isKwhOverLimit =
+  isKwhValid &&
+  maxKwh !== null &&
+  Number(kWh) > maxKwh;
+
 
   useEffect(() => {
   async function fetchDorms() {
@@ -37,30 +73,43 @@ export default function StudentHousingForm() {
 
       const data = await res.json();
 
-      console.log("Dorm data from backend:", data);
-
-      const names = data.map((d: any) => d.name);
-
-      setDormOptions(names);
+      setDormOptions(data)
     } catch (error) {
-      console.error("Fetch dorms error:", error);
+      console.error(error);
     }
   }
 
   fetchDorms();
 }, []);
 
+useEffect(() => {
+  if (!selectedDormId || selectedDormId === "add-new") {
+    setSelectedDormDetail(null);
+    return;
+  }
 
-  const handlePeriodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const [year, month] = value.split("-");
-    const monthNames = [
-      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-      "Juli", "Agustus", "September", "Oktober", "November", "Desember",
-    ];
-    const formatted = `${monthNames[parseInt(month) - 1]} ${year}`;
-    setPeriode(formatted);
-  };
+  async function fetchDormDetail() {
+    try {
+      const res = await fetch(`/api/dorm/${selectedDormId}`);
+      if (!res.ok) return;
+
+      const data = await res.json();
+      setSelectedDormDetail(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  fetchDormDetail();
+}, [selectedDormId]);
+
+
+
+const handlePeriodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value; // "2025-09"
+  setPeriode(`${value}-01`);    // "2025-09-01" ✅ VALID DATE
+};
+
 
   const handleDormChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -115,6 +164,20 @@ export default function StudentHousingForm() {
   }
 };
 
+const EMISSION_FACTOR = 0.85;
+
+const hasValidEnergyInput =
+  kWh !== "" &&
+  bill !== "" &&
+  !isNaN(Number(kWh)) &&
+  !isNaN(Number(bill)) &&
+  Number(kWh) > 0 &&
+  Number(bill) > 0;
+
+const emission = hasValidEnergyInput
+  ? Number(kWh) * EMISSION_FACTOR
+  : 0;
+
 
   // 🔘 Klik tombol simpan → buka modal konfirmasi
   const handleSaveClick = () => {
@@ -125,22 +188,27 @@ export default function StudentHousingForm() {
   try {
     setShowConfirm(false);
 
-    // validasi
-    if (!periode || !selectedDorm || !kWh || !bill) {
+    const dormName =
+      dormOptions.find(d => d.id === selectedDormId)?.name;
+
+    if (!periode || !dormName || !kWh || !bill) {
       setShowError(true);
       return;
     }
 
-    // Kirim ke backend
+    const payload = {
+      period: periode,                 // "YYYY-MM-01"
+      dormName: dormName,              // STRING
+      totalKwh: Number(kWh),           // NUMBER
+      billAmount: Number(bill),        // NUMBER
+    };
+
+    console.log("PAYLOAD KE BACKEND:", payload);
+
     const res = await fetch("/api/dorm-record", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        period: periode,
-        dormName: selectedDorm,
-        totalKwh: kWh,
-        billAmount: bill,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
@@ -148,7 +216,6 @@ export default function StudentHousingForm() {
       return;
     }
 
-    // Success
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
 
@@ -158,34 +225,83 @@ export default function StudentHousingForm() {
   }
 };
 
+
   return (
     <main className="min-h-screen w-full bg-[#f2ecf9] flex flex-col">
-      {/* Navbar */}
-      <div className="bg-white shadow-sm w-full py-4 px-6 flex justify-between items-center pl-[150px]">
-        <Image
-          src="https://super.universitaspertamina.ac.id/wp-content/uploads/2025/07/logo_sc.png"
-          alt="Universitas Pertamina Sustainability Center"
-          width={180}
-          height={40}
-          priority
-        />
+          {/* Navbar */}
+<div className="bg-white shadow-sm w-full">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-4 flex justify-between items-center">
+    
+    {/* Logo */}
+    <div className="flex items-center gap-3">
+      <Image
+        src="https://super.universitaspertamina.ac.id/wp-content/uploads/2025/07/logo_sc.png"
+        alt="Universitas Pertamina Sustainability Center"
+        width={160}
+        height={40}
+        priority
+        className="w-[130px] sm:w-[150px] md:w-[170px]"
+      />
+    </div>
 
-        <nav className="flex gap-6 text-gray-700 font-medium text-sm md:text-base pr-[100px]">
-          <Link
-            href="#"
-            className="text-black font-semibold px-4 py-1 rounded-md border-2 border-black flex items-center gap-2"
-          >
-            <span>📃</span> Asrama Beasiswa
-          </Link>
-        </nav>
-      </div>
+    {/* Desktop Menu */}
+    <nav className="hidden md:flex gap-6 text-gray-700 font-medium text-sm md:text-base">
+      <Link
+        href="#"
+        className="text-black font-semibold px-4 py-2 rounded-md border-2 border-black flex items-center gap-2 hover:bg-black hover:text-white transition"
+      >
+        <span>📃</span> Asrama Beasiswa
+      </Link>
+    </nav>
+
+    {/* Mobile Menu Button */}
+    <div className="md:hidden">
+      <button
+        onClick={() => alert("Menu Mobile")}
+        className="text-black border border-black px-4 py-2 rounded-md text-sm"
+      >
+        ☰ Menu
+      </button>
+    </div>
+
+  </div>
+</div>
+
 
       {/* Form Section - FULL SCREEN */}
       <section className="flex-1 flex flex-col justify-center items-center w-full px-6 sm:px-8 py-8 bg-white shadow-inner pb-[150px]">
         <div className="w-full max-w-6xl">
-          <h1 className="text-5xl font-bold text-center mb-8 mt-0 text-black">
+          
+          {/* Icon Kembali */}
+          <div className="relative mb-10">
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full md:w-80 flex justify-start">
+              <button
+                onClick={() => alert("Kembali ke halaman sebelumnya (dummy)")}
+                className="
+                  w-10 h-10
+                  rounded-full
+                  flex items-center justify-center
+                hover:bg-gray-200
+                  transition
+                "
+              >
+              <img
+                src="https://cdn-icons-png.freepik.com/512/3114/3114883.png"
+                alt="Back"
+                className="w-6 h-6 object-contain"
+              />
+            </button>
+          </div>
+
+          {/* Judul */}
+          <h1 className="
+            text-2xl sm:text-3xl md:text-4xl lg:text-5xl
+            font-bold text-black
+            text-center
+          ">
             Pendataan Asrama Mahasiswa
           </h1>
+        </div>
 
           <form className="space-y-6">
             {/* Periode */}
@@ -204,26 +320,99 @@ export default function StudentHousingForm() {
             </div>
 
             {/* Nama Asrama */}
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-              <label className="w-full md:w-80 text-black font-semibold text-xl">
-                Nama Asrama
-              </label>
-              <select
-                className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-gray-600 focus:ring-2 focus:ring-green-300 w-full"
-                value={selectedDorm}
-                onChange={handleDormChange}
-              >
-                <option value="">Pilih Nama Asrama</option>
-                  {dormOptions.map((name: string) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-            ))}
+<div className="flex flex-col gap-4">
+  <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+    <label className="w-full md:w-80 text-black font-semibold text-xl">
+      Nama Asrama
+    </label>
 
-            <option value="add-new">+ Tambahkan Nama Asrama</option>
-          </select>
+    <select
+      className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-black focus:ring-2 focus:ring-green-300 w-full"
+      value={selectedDormId}
+      onChange={(e) => {
+        const value = e.target.value;
+        if (value === "add-new") {
+          setShowAddDorm(true);
+          setSelectedDormId("");
+          setSelectedDormDetail(null);
+        } else {
+          setShowAddDorm(false);
+          setSelectedDormId(value);
+        }
+      }}
+    >
+      <option value="">Pilih Nama Asrama</option>
 
-            </div>
+      {dormOptions.map((dorm) => (
+        <option key={dorm.id} value={dorm.id}>
+          {dorm.name}
+        </option>
+      ))}
+
+      <option value="add-new">+ Tambahkan Nama Asrama</option>
+    </select>
+  </div>
+
+  {/* DETAIL DATA ASRAMA */}
+{selectedDormDetail && (
+  <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
+    
+    {/* Spacer kiri agar sejajar dengan field lain */}
+    <div className="w-full md:w-80" />
+
+    {/* Card kanan (sejajar input) */}
+    <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-5">
+      
+      {/* Judul di dalam card */}
+      <h3 className="text-lg font-semibold text-black mb-4">
+        Detail Data Asrama
+      </h3>
+
+      {/* Isi detail */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <p className="text-sm font-medium text-black">
+            Jumlah Penghuni
+          </p>
+          <p className="text-base font-semibold text-black">
+            {selectedDormDetail.capacity} orang
+          </p>
+        </div>
+
+        <div>
+          <p className="text-sm font-medium text-black">
+            Gender
+          </p>
+          <p className="text-base font-semibold text-black">
+            {selectedDormDetail.gender}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-sm font-medium text-black">
+            Daya Listrik
+          </p>
+          <p className="text-base font-semibold text-black">
+            {selectedDormDetail.powerCapacity} VA
+          </p>
+        </div>
+
+        <div>
+          <p className="text-sm font-medium text-black">
+            Tipe Pembayaran
+          </p>
+          <p className="text-base font-semibold text-black">
+            {selectedDormDetail.paymentType ?? "Prabayar"}
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+)}
+</div>
+
+          
             {/* Tambah Asrama Baru */}
             {showAddDorm && (
               <div className="flex flex-col gap-4 p-4 bg-gray-50 border rounded-md animate-fadeIn">
@@ -266,7 +455,17 @@ export default function StudentHousingForm() {
                   type="number"
                   min="0"
                   value={newCapacity}
-                  onChange={(e) => setNewCapacity(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "-" || e.key === "e") {
+                      e.preventDefault(); // ❌ blok minus & e
+                    }
+                  }}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "" || Number(value) >= 0) {
+                      setNewCapacity(value);
+                    }
+                  }}
                   placeholder="Contoh: 24"
                   className="flex-1 border border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:ring-2 focus:ring-green-300"
                 />
@@ -281,7 +480,17 @@ export default function StudentHousingForm() {
                   type="number"
                   min="0"
                   value={newPower}
-                  onChange={(e) => setNewPower(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "-" || e.key === "e") {
+                      e.preventDefault(); // ❌ blok minus & e
+                    }
+                  }}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "" || Number(value) >= 0) {
+                      setNewPower(value);
+                    }
+                  }}
                   placeholder="Contoh: 2200"
                   className="flex-1 border border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:ring-2 focus:ring-green-300"
                 />
@@ -309,6 +518,39 @@ export default function StudentHousingForm() {
             </div>
           )}
 
+          {/* Tagihan Listrik */}
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+              <label className="w-full md:w-80 text-black font-semibold text-xl">
+                Tagihan Listrik (Rp/Bulan)
+              </label>
+              <div className="flex-1 relative w-full">
+                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-600">
+                  Rp.
+                </span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  min="0"
+                  placeholder="Masukkan jumlah tagihan"
+                  value={
+                    bill === ""
+                    ? ""
+                    : new Intl.NumberFormat("id-ID").format(Number(bill))
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "-" || e.key === "e") {
+                      e.preventDefault();
+                    }
+                  }}
+                  onChange={(e) => {
+                    const rawValue = e.target.value.replace(/\D/g, "");
+                    setBill(rawValue); // ✅ HANYA setBill, TIDAK setKWh
+                  }}
+                  className="w-full border border-gray-300 rounded-md p-2 pl-10 bg-white text-gray-700 focus:ring-3 focus:ring-green-300"
+                />
+              </div>
+            </div>
+
             {/* Total Konsumsi Listrik */}
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
               <label className="w-full md:w-80 text-black font-semibold text-xl">
@@ -320,48 +562,85 @@ export default function StudentHousingForm() {
                   min="0"
                   placeholder="Masukkan Jumlah kWh"
                   value={kWh}
-                  onChange={(e) => setKWh(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "-" || e.key === "e") {
+                      e.preventDefault(); // Blok tombol minus & e (scientific)
+                    }
+                  }}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "" || Number(value) >= 0) {
+                      setKWh(value);
+                    }
+                  }}
                   className="w-full border left-2 border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:ring-3 focus:ring-green-300"
                 />
+                {isKwhOverLimit && (
+  <p className="text-sm text-red-600 mt-1">
+    Konsumsi listrik melebihi batas maksimum teoritis
+    ({maxKwh?.toFixed(0)} kWh/bulan) berdasarkan daya asrama.
+    Mohon periksa kembali input Anda.
+  </p>
+)}
+
               </div>
             </div>
 
-            {/* Tagihan Listrik */}
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-              <label className="w-full md:w-80 text-black font-semibold text-xl">
-                Tagihan Listrik (Rp/Bulan)
-              </label>
-              <div className="flex-1 relative w-full">
-                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-600">
-                  Rp.
-                </span>
-                <input
-                  type="number"
-                  min="0"
-                  placeholder="Masukkan jumlah tagihan"
-                  value={bill}
-                  onChange={(e) => setBill(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md p-2 pl-10 bg-white text-gray-700 focus:ring-3 focus:ring-green-300"
-                />
-              </div>
-            </div>
+            
+            {/* EMISI KARBON */}
+{/* EMISI KARBON */}
+{hasValidEnergyInput && (
+  <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
+    
+    {/* Spacer kiri (sejajar label form) */}
+    <div className="w-full md:w-80" />
+
+    {/* Card kanan (sejajar input field) */}
+    <div className="flex-1 bg-green-50 border border-green-300 rounded-lg p-5">
+      
+      <h3 className="text-lg font-semibold text-black mb-2">
+        Emisi Karbon (Otomatis)
+      </h3>
+
+      <p className="text-3xl font-bold text-green-800">
+        {emission.toFixed(2)} kg CO₂e
+      </p>
+
+      <p className="text-sm text-green-700 mt-2">
+        Faktor emisi: {EMISSION_FACTOR} kg CO₂e/kWh
+      </p>
+    </div>
+  </div>
+)}
 
             {/* Tombol Simpan */}
-            <div className="pt-6 text-center">
-              <button
-                type="button"
-                onClick={handleSaveClick}
-                className="bg-black hover:bg-green-800 text-white font-semibold w-full md:w-auto px-70 py-2 rounded-md transition duration-200"
-              >
-                Simpan Data
-              </button>
+            <div className="pt-6 flex justify-center">
+            <button
+  type="button"
+  onClick={handleSaveClick}
+  disabled={isKwhOverLimit}
+  className={`
+    w-full sm:w-2/3 md:w-1/2 lg:w-1/3
+    py-3 px-6 rounded-md font-semibold
+    transition duration-200
+    ${
+      isKwhOverLimit
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-black hover:bg-green-800 text-white"
+    }
+  `}
+>
+  Simpan Data
+</button>
+
             </div>
+
           </form>
         </div>
       </section>
 
       
-      {/* MODAL KONFIRMASI */}
+      MODAL KONFIRMASI
       {showConfirm && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur z-50">
           <div className="bg-white rounded-xl p-6 w-[350px] text-center shadow-xl relative border border-gray-100 animate-pop-in">

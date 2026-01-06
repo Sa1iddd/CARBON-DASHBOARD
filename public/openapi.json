@@ -1,0 +1,109 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Student Housing API",
+    "version": "1.0.0",
+    "description": "API Documentation for Master Data Asrama & Student Housing Electricity Records"
+  },
+  "servers": [
+    { "url": "http://localhost:3000/api" }
+  ],
+  "paths": {
+    "/dorm": {
+      "get": {
+        "summary": "Get all dorms",
+        "tags": ["Dorm"],
+        "responses": {
+          "200": {
+            "description": "List of dorms",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create new dorm",
+        "tags": ["Dorm"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "gender": { "type": "string", "enum": ["PUTRA", "PUTRI"] },
+                  "capacity": { "type": "integer" },
+                  "powerCapacity": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Dorm created" },
+          "400": { "description": "Invalid input" }
+        }
+      }
+    },
+
+    "/dorm/{id}": {
+      "delete": {
+        "summary": "Delete dorm by ID",
+        "tags": ["Dorm"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Dorm deleted" },
+          "404": { "description": "Dorm not found" }
+        }
+      }
+    },
+
+    "/dorm-record": {
+      "get": {
+        "summary": "Get all electricity records",
+        "tags": ["DormRecord"],
+        "responses": {
+          "200": {
+            "description": "List of dorm electricity records",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create new dorm electricity record",
+        "tags": ["DormRecord"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "period": { "type": "string" },
+                  "dormName": { "type": "string" },
+                  "totalKwh": { "type": "number" },
+                  "billAmount": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Record created" },
+          "400": { "description": "Invalid data" }
+        }
+      }
+    }
+  }
+}
