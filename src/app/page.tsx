@@ -18,6 +18,7 @@ export default function StudentHousingForm() {
   paymentType?: string;
 };
 
+  // validasi
   const [dormOptions, setDormOptions] = useState<Dorm[]>([]);
   const [selectedDormId, setSelectedDormId] = useState("");
   const [selectedDormDetail, setSelectedDormDetail] = useState<Dorm | null>(null);
@@ -31,34 +32,35 @@ export default function StudentHousingForm() {
   const [newGender, setNewGender] = useState("PUTRA");
   const [newCapacity, setNewCapacity] = useState("");
   const [newPower, setNewPower] = useState("");
+  const [periodError, setPeriodError] = useState<string | null>(null);
+  const [existingRecords, setExistingRecords] = useState<any[]>([]);
+  const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  const [inputSource, setInputSource] = useState<
+  "kwh" | "bill" | null>(null);
   const selectedDormName =
   dormOptions.find(d => d.id === selectedDormId)?.name || "";
-
-
-  // validasi 
   const [kWh, setKWh] = useState("");
   const [bill, setBill] = useState("");
-  // ===== VALIDASI KONSUMSI LISTRIK =====
   const HOURS_PER_DAY = 24;
   const DAYS_PER_MONTH = 30;
 
-// batas kWh berdasarkan daya asrama
-const maxKwh =
-  selectedDormDetail
-    ? (selectedDormDetail.powerCapacity * HOURS_PER_DAY * DAYS_PER_MONTH) / 1000
-    : null;
+  // batas kWh berdasarkan daya asrama
+  const maxKwh =
+    selectedDormDetail
+      ? (selectedDormDetail.powerCapacity * HOURS_PER_DAY * DAYS_PER_MONTH) / 1000
+      : null;
 
-// validasi nilai kWh
-const isKwhValid =
-  kWh !== "" &&
-  !isNaN(Number(kWh)) &&
-  Number(kWh) > 0;
+  // validasi nilai kWh
+  const isKwhValid =
+    kWh !== "" &&
+    !isNaN(Number(kWh)) &&
+    Number(kWh) > 0;
 
-// cek apakah kWh melewati batas wajar
-const isKwhOverLimit =
-  isKwhValid &&
-  maxKwh !== null &&
-  Number(kWh) > maxKwh;
+  // cek apakah kWh melewati batas wajar
+  const isKwhOverLimit =
+    isKwhValid &&
+    maxKwh !== null &&
+    Number(kWh) > maxKwh;
 
 
   useEffect(() => {
@@ -103,12 +105,52 @@ useEffect(() => {
   fetchDormDetail();
 }, [selectedDormId]);
 
+useEffect(() => {
+  const fetchRecords = async () => {
+    try {
+      const res = await fetch("/api/dorm-record");
+      if (!res.ok) return;
 
+      const data = await res.json();
+      setExistingRecords(data);
+    } catch (err) {
+      console.error("Fetch records error:", err);
+    }
+  };
+
+  fetchRecords();
+}, []);
+
+const checkDuplicateRecord = (period: string, dormName: string) => {
+  if (!period || !dormName) return false;
+
+  return existingRecords.some((record) => {
+    const recordPeriod = new Date(record.period);
+    const inputPeriod = new Date(period);
+
+    return (
+      record.dormName === dormName &&
+      recordPeriod.getFullYear() === inputPeriod.getFullYear() &&
+      recordPeriod.getMonth() === inputPeriod.getMonth()
+    );
+  });
+};
 
 const handlePeriodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const value = e.target.value; // "2025-09"
-  setPeriode(`${value}-01`);    // "2025-09-01" ✅ VALID DATE
+  const value = e.target.value; // YYYY-MM
+  const formatted = `${value}-01`;
+
+  setPeriode(formatted);
+
+  runAllValidations(formatted, selectedDormName);
 };
+
+useEffect(() => {
+  if (!periode || !selectedDormName) return;
+
+  runAllValidations(periode, selectedDormName);
+}, [periode, selectedDormName]);
+
 
 
   const handleDormChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -119,6 +161,79 @@ const handlePeriodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setSelectedDorm(value);
     }
   };
+
+const validatePeriodValue = (value: string): string | null => {
+  if (!value) return "Periode wajib diisi";
+
+  // value SUDAH YYYY-MM-01
+  const selected = new Date(value);
+  const now = new Date();
+
+  const monthDiff =
+    (now.getFullYear() - selected.getFullYear()) * 12 +
+    (now.getMonth() - selected.getMonth());
+
+  if (monthDiff < 0) return "Periode belum dimulai";
+  if (monthDiff >= 2) return "Periode sudah tertutup";
+
+  return null;
+};
+
+
+const validateDuplicateValue = (
+  period: string,
+  dormName: string
+): string | null => {
+  if (!period || !dormName) return null;
+
+  const inputDate = new Date(period);
+
+  const isDuplicate = existingRecords.some((record) => {
+    const recordDate = new Date(record.period);
+
+    return (
+      record.dormName === dormName &&
+      recordDate.getFullYear() === inputDate.getFullYear() &&
+      recordDate.getMonth() === inputDate.getMonth()
+    );
+  });
+
+  return isDuplicate
+    ? "Data untuk asrama dan periode ini sudah pernah diinput"
+    : null;
+};
+
+const runAllValidations = (
+  periodValue: string,
+  dormName: string
+) => {
+  const periodValidation = validatePeriodValue(periodValue);
+  setPeriodError(periodValidation);
+
+  if (!periodValidation) {
+    const duplicateValidation = validateDuplicateValue(
+      periodValue,
+      dormName
+    );
+    setDuplicateError(duplicateValidation);
+  } else {
+    setDuplicateError(null);
+  }
+};
+
+const resetForm = () => {
+  setPeriode("");
+  setSelectedDormId("");
+  setKWh("");
+  setBill("");
+
+  // reset error states
+  setPeriodError(null);
+  setDuplicateError(null);
+
+  setSelectedDormDetail(null);
+  setShowAddDorm(false);
+};
 
   const handleAddDorm = async () => {
   if (!newDorm.trim() || !newGender || !newCapacity || !newPower) {
@@ -147,10 +262,20 @@ const handlePeriodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
     const created = await res.json();
 
-    // Update dropdown
-    setDormOptions(prev => [...prev, created.name]);
-    setSelectedDorm(created.name);
+    // object
+    setDormOptions(prev => [
+    ...prev,
+    {
+      id: created.id,
+      name: created.name,
+      gender: created.gender,
+      capacity: created.capacity,
+      powerCapacity: created.powerCapacity,
+    }
+]);
 
+// set selected ke ID
+setSelectedDormId(created.id);
     // Reset state
     setNewDorm("");
     setNewGender("PUTRA");
@@ -178,8 +303,51 @@ const emission = hasValidEnergyInput
   ? Number(kWh) * EMISSION_FACTOR
   : 0;
 
+/**
+ * Referensi tarif PLN non-subsidi
+ * Sumber: Permen ESDM (R-1 & R-2)
+ * Berlaku nasional
+ */
+const PLN_TARIFF_BY_POWER: Record<number, number> = {
+  1300: 1444.7,
+  2200: 1444.7,
+  3500: 1699.53,
+  4400: 1699.53,
+  5500: 1699.53,
+};
 
-  // 🔘 Klik tombol simpan → buka modal konfirmasi
+const getPlnTariff = (powerCapacity?: number) => {
+  if (!powerCapacity) return null;
+
+  return (
+    PLN_TARIFF_BY_POWER[powerCapacity] ??
+    1444.7 // fallback aman
+  );
+};
+
+useEffect(() => {
+  if (!selectedDormDetail) return;
+
+  const tariff = getPlnTariff(
+    selectedDormDetail.powerCapacity
+  );
+  if (!tariff) return;
+
+  if (inputSource === "kwh" && kWh) {
+    setBill(String(Math.round(Number(kWh) * tariff)));
+  }
+
+  if (inputSource === "bill" && bill) {
+    setKWh(String(Math.round(Number(bill) / tariff)));
+  }
+}, [
+  kWh,
+  bill,
+  inputSource,
+  selectedDormDetail
+]);
+
+  // tombol simpan → buka modal konfirmasi
   const handleSaveClick = () => {
     setShowConfirm(true);
   };
@@ -216,8 +384,15 @@ const emission = hasValidEnergyInput
       return;
     }
 
+    const savedRecord = await res.json();
+    setExistingRecords(prev => [
+    ...prev,
+    savedRecord
+    ]);
+
     setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+    resetForm();
+    setTimeout(() => setShowSuccess(false), 3000);  
 
   } catch (error) {
     console.error(error);
@@ -228,9 +403,9 @@ const emission = hasValidEnergyInput
 
   return (
     <main className="min-h-screen w-full bg-[#f2ecf9] flex flex-col">
-          {/* Navbar */}
-<div className="bg-white shadow-sm w-full">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-4 flex justify-between items-center">
+    {/* Navbar */}
+    <div className="bg-white shadow-sm w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-4 flex justify-between items-center">
     
     {/* Logo */}
     <div className="flex items-center gap-3">
@@ -264,8 +439,8 @@ const emission = hasValidEnergyInput
       </button>
     </div>
 
-  </div>
-</div>
+      </div>
+    </div>
 
 
       {/* Form Section - FULL SCREEN */}
@@ -304,79 +479,113 @@ const emission = hasValidEnergyInput
         </div>
 
           <form className="space-y-6">
-            {/* Periode */}
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-              <label className="w-full md:w-80 text-black font-semibold text-xl">
-                Periode
-              </label>
-              <div className="relative flex-1 w-full">
-                <input
-                  type="month"
-                  onChange={handlePeriodeChange}
-                  className="w-full border border-gray-300 rounded-md p-2 pl-3 pr-10 bg-white text-gray-700 placeholder-gray-400 focus:ring-3 focus:ring-green-300 apx`pearance-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                />
-                <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
-              </div>
-            </div>
+        {/* Periode */}
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+          <label className="w-full md:w-80 text-black font-semibold text-xl">
+            Periode
+          </label>
 
-            {/* Nama Asrama */}
-<div className="flex flex-col gap-4">
-  <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-    <label className="w-full md:w-80 text-black font-semibold text-xl">
-      Nama Asrama
-    </label>
-
-    <select
-      className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-black focus:ring-2 focus:ring-green-300 w-full"
-      value={selectedDormId}
-      onChange={(e) => {
-        const value = e.target.value;
-        if (value === "add-new") {
-          setShowAddDorm(true);
-          setSelectedDormId("");
-          setSelectedDormDetail(null);
-        } else {
-          setShowAddDorm(false);
-          setSelectedDormId(value);
-        }
-      }}
-    >
-      <option value="">Pilih Nama Asrama</option>
-
-      {dormOptions.map((dorm) => (
-        <option key={dorm.id} value={dorm.id}>
-          {dorm.name}
-        </option>
-      ))}
-
-      <option value="add-new">+ Tambahkan Nama Asrama</option>
-    </select>
-  </div>
-
-  {/* DETAIL DATA ASRAMA */}
-{selectedDormDetail && (
-  <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
+        {/* Kolom input + error */}
+        <div className="flex-1 w-full">
     
-    {/* Spacer kiri agar sejajar dengan field lain */}
-    <div className="w-full md:w-80" />
+        {/* Input + icon (JANGAN ADA ERROR DI SINI) */}
+        <div className="relative">
+          <input
+            type="month"
+            onChange={handlePeriodeChange}
+            className="
+              w-full border border-gray-300 rounded-md
+              p-2 pl-3 pr-10
+              bg-white text-gray-700
+              focus:ring-3 focus:ring-green-300
+              appearance-none
+              [&::-webkit-calendar-picker-indicator]:opacity-0
+              [&::-webkit-calendar-picker-indicator]:absolute
+              [&::-webkit-calendar-picker-indicator]:right-3
+              [&::-webkit-calendar-picker-indicator]:cursor-pointer
+              "
+          />
 
-    {/* Card kanan (sejajar input) */}
-    <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-5">
+        {/* Ikon kalender */}
+        <Calendar className="
+          absolute right-3 top-1/2 -translate-y-1/2
+          text-gray-500 w-5 h-5 pointer-events-none
+        " />
+        </div>
+
+        {/* Error message (DI LUAR relative) */}
+        {periodError && (
+          <p className="text-sm text-red-600 mt-1">
+            {periodError}
+          </p>
+        )}
+
+        {duplicateError && (
+          <p className="text-sm text-red-600 mt-1">
+          {duplicateError}
+          </p>
+        )}
+      </div>
+    </div>
+
+        {/* Nama Asrama */}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+            <label className="w-full md:w-80 text-black font-semibold text-xl">
+              Nama Asrama
+            </label>
+
+            <select
+              className="flex-1 border bg-white border-gray-300 rounded-md p-2 text-black focus:ring-2 focus:ring-green-300 w-full"
+              value={selectedDormId}
+              onChange={(e) => {
+              const value = e.target.value;
+              if (value === "add-new") {
+                setShowAddDorm(true);
+                setSelectedDormId("");
+                setSelectedDormDetail(null);
+              } else {
+                setShowAddDorm(false);
+              setSelectedDormId(value);
+              }
+              }}
+            >
+            <option value="">Pilih Nama Asrama</option>
+
+            {dormOptions.map((dorm) => (
+              <option key={dorm.id} value={dorm.id}>
+                {dorm.name}
+              </option>
+            ))}
+
+            <option value="add-new">+ Tambahkan Nama Asrama</option>
+            </select>
+          </div>
+
+        {/* DETAIL DATA ASRAMA */}
+        {selectedDormDetail && (
+        <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
+    
+        {/* Spacer kiri agar sejajar dengan field lain */}
+        <div className="w-full md:w-80" />
+
+        {/* Card kanan (sejajar input) */}
+        <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-5">
       
-      {/* Judul di dalam card */}
-      <h3 className="text-lg font-semibold text-black mb-4">
-        Detail Data Asrama
-      </h3>
+        {/* Judul di dalam card */}
+        <h3 className="text-lg font-semibold text-black mb-4">
+          Detail Data Asrama
+        </h3>
 
-      {/* Isi detail */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div>
-          <p className="text-sm font-medium text-black">
-            Jumlah Penghuni
-          </p>
-          <p className="text-base font-semibold text-black">
-            {selectedDormDetail.capacity} orang
-          </p>
+        {/* Isi detail */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <p className="text-sm font-medium text-black">
+              Jumlah Penghuni
+            </p>
+            <p className="text-base font-semibold text-black">
+              {selectedDormDetail.capacity} orang
+            </p>
         </div>
 
         <div>
@@ -411,8 +620,7 @@ const emission = hasValidEnergyInput
   </div>
 )}
 </div>
-
-          
+ 
             {/* Tambah Asrama Baru */}
             {showAddDorm && (
               <div className="flex flex-col gap-4 p-4 bg-gray-50 border rounded-md animate-fadeIn">
@@ -544,8 +752,10 @@ const emission = hasValidEnergyInput
                   }}
                   onChange={(e) => {
                     const rawValue = e.target.value.replace(/\D/g, "");
-                    setBill(rawValue); // ✅ HANYA setBill, TIDAK setKWh
+                    setInputSource("bill");
+                    setBill(rawValue);
                   }}
+
                   className="w-full border border-gray-300 rounded-md p-2 pl-10 bg-white text-gray-700 focus:ring-3 focus:ring-green-300"
                 />
               </div>
@@ -568,78 +778,73 @@ const emission = hasValidEnergyInput
                     }
                   }}
                   onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "" || Number(value) >= 0) {
-                      setKWh(value);
-                    }
+                    const value = e.target.value.replace(/\D/g, "");
+                    setInputSource("kwh");
+                    setKWh(value);
                   }}
+
                   className="w-full border left-2 border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:ring-3 focus:ring-green-300"
                 />
                 {isKwhOverLimit && (
-  <p className="text-sm text-red-600 mt-1">
-    Konsumsi listrik melebihi batas maksimum teoritis
-    ({maxKwh?.toFixed(0)} kWh/bulan) berdasarkan daya asrama.
-    Mohon periksa kembali input Anda.
-  </p>
-)}
-
+                  <p className="text-sm text-red-600 mt-1">
+                    Konsumsi listrik melebihi batas maksimum teoritis
+                    ({maxKwh?.toFixed(0)} kWh/bulan) berdasarkan daya asrama.
+                    Mohon periksa kembali input Anda.
+                  </p>
+                )}
               </div>
             </div>
 
-            
-            {/* EMISI KARBON */}
-{/* EMISI KARBON */}
-{hasValidEnergyInput && (
-  <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
+          {/* EMISI KARBON */}
+          {hasValidEnergyInput && (
+          <div className="flex flex-col md:flex-row items-start gap-4 mt-4">
     
-    {/* Spacer kiri (sejajar label form) */}
-    <div className="w-full md:w-80" />
+          {/* Spacer kiri (sejajar label form) */}
+            <div className="w-full md:w-80" />
 
-    {/* Card kanan (sejajar input field) */}
-    <div className="flex-1 bg-green-50 border border-green-300 rounded-lg p-5">
+          {/* Card kanan (sejajar input field) */}
+              <div className="flex-1 bg-green-50 border border-green-300 rounded-lg p-5">
       
-      <h3 className="text-lg font-semibold text-black mb-2">
-        Emisi Karbon (Otomatis)
-      </h3>
+                <h3 className="text-lg font-semibold text-black mb-2">
+                  Emisi Karbon (Otomatis)
+                </h3>
 
-      <p className="text-3xl font-bold text-green-800">
-        {emission.toFixed(2)} kg CO₂e
-      </p>
+                <p className="text-3xl font-bold text-green-800">
+                  {emission.toFixed(2)} kg CO₂e
+                </p>
 
-      <p className="text-sm text-green-700 mt-2">
-        Faktor emisi: {EMISSION_FACTOR} kg CO₂e/kWh
-      </p>
-    </div>
-  </div>
-)}
+                <p className="text-sm text-green-700 mt-2">
+                  Faktor emisi: {EMISSION_FACTOR} kg CO₂e/kWh
+                </p>
+              </div>
+            </div>
+          )}
 
-            {/* Tombol Simpan */}
+          {/* Tombol Simpan */}
             <div className="pt-6 flex justify-center">
-            <button
-  type="button"
-  onClick={handleSaveClick}
-  disabled={isKwhOverLimit}
-  className={`
-    w-full sm:w-2/3 md:w-1/2 lg:w-1/3
-    py-3 px-6 rounded-md font-semibold
-    transition duration-200
-    ${
-      isKwhOverLimit
-        ? "bg-gray-400 cursor-not-allowed"
-        : "bg-black hover:bg-green-800 text-white"
-    }
-  `}
->
-  Simpan Data
-</button>
+              <button
+                type="button"
+                onClick={handleSaveClick}
+                disabled={isKwhOverLimit || !!periodError || !!duplicateError}
+                className={`
+                w-full sm:w-2/3 md:w-1/2 lg:w-1/3
+                py-3 px-6 rounded-md font-semibold
+                transition duration-200
+                ${
+                isKwhOverLimit || periodError || duplicateError
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-black hover:bg-green-800 text-white"
+                }
+              `}
+              >
+                Simpan Data
+              </button>
 
             </div>
-
           </form>
         </div>
       </section>
 
-      
       MODAL KONFIRMASI
       {showConfirm && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur z-50">
