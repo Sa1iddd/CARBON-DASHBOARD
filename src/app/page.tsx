@@ -84,26 +84,54 @@ export default function StudentHousingForm() {
   fetchDorms();
 }, []);
 
+// useEffect(() => {
+//   if (!selectedDormId || selectedDormId === "add-new") {
+//     setSelectedDormDetail(null);
+//     return;
+//   }
+
+//   async function fetchDormDetail() {
+//     try {
+//       const res = await fetch(`/api/dorm/${selectedDormId}`);
+//       if (!res.ok) return;
+
+//       const data = await res.json();
+//       setSelectedDormDetail(data);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   }
+
+//   fetchDormDetail();
+// }, [selectedDormId]);
+
 useEffect(() => {
-  if (!selectedDormId || selectedDormId === "add-new") {
+  if (!selectedDormId || selectedDormId.trim() === "") {
     setSelectedDormDetail(null);
     return;
   }
 
-  async function fetchDormDetail() {
+  const fetchDormDetail = async () => {
     try {
       const res = await fetch(`/api/dorm/${selectedDormId}`);
-      if (!res.ok) return;
+
+      if (!res.ok) {
+        console.error("Failed to fetch dorm detail");
+        setSelectedDormDetail(null);
+        return;
+      }
 
       const data = await res.json();
       setSelectedDormDetail(data);
     } catch (error) {
-      console.error(error);
+      console.error("Fetch dorm detail error:", error);
+      setSelectedDormDetail(null);
     }
-  }
+  };
 
   fetchDormDetail();
 }, [selectedDormId]);
+
 
 useEffect(() => {
   const fetchRecords = async () => {
@@ -293,15 +321,13 @@ const EMISSION_FACTOR = 0.85;
 
 const hasValidEnergyInput =
   kWh !== "" &&
-  bill !== "" &&
   !isNaN(Number(kWh)) &&
-  !isNaN(Number(bill)) &&
-  Number(kWh) > 0 &&
-  Number(bill) > 0;
+  Number(kWh) > 0;
 
 const emission = hasValidEnergyInput
   ? Number(kWh) * EMISSION_FACTOR
   : 0;
+
 
 /**
  * Referensi tarif PLN non-subsidi
@@ -845,6 +871,7 @@ useEffect(() => {
         </div>
       </section>
 
+      
       MODAL KONFIRMASI
       {showConfirm && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur z-50">

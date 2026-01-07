@@ -10,6 +10,7 @@ export default class DormController {
     this.service = new DormService();
   }
 
+
   async create(data: CreateDormDTO) {
     return this.service.create(data);
   }

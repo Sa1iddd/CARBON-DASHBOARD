@@ -15,8 +15,18 @@ export class DormRepository {
   }
 
   async findById(id: string) {
+    // before update next
     return prisma.dorm.findUnique({ where: { id } });
+
+    // if (!id) {
+    //   throw new Error("Dorm ID is required");
+    // }
+
+    // return prisma.dorm.findFirst({
+    //   where: { id },
+    // });
   }
+
 
   async update(id: string, data: UpdateDormDTO) {
     return prisma.dorm.update({
