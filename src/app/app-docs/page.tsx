@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import SwaggerUI from "swagger-ui-dist";
 import "swagger-ui-dist/swagger-ui.css";
 
+export const dynamic = "force-dynamic";
+
 export default function ApiDocs() {
   const uiRef = useRef<HTMLDivElement>(null);
 

@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   description: "Carbon Dashboard - Student Housing Form UI",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{
