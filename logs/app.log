@@ -12940,3 +12940,208 @@
 [2026-01-08 10:28:13] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
 [2026-01-08 10:28:13] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdBy","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmk4w0ijk0001ozroro10fyd3","2026-01-01 00:00:00 UTC","An Nur",294,500000,"dev-user","2026-01-08 03:28:13.278 UTC","2026-01-08 03:28:13.278 UTC"] | Duration: 10ms[39m
 [2026-01-08 10:28:13] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdBy","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmk4w0ijk0001ozroro10fyd3","2026-01-01 00:00:00 UTC","An Nur",294,500000,"dev-user","2026-01-08 03:28:13.278 UTC","2026-01-08 03:28:13.278 UTC"] | Duration: 10ms[39m
+[2026-01-15 17:23:06] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:23:07] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 50ms[39m
+[2026-01-15 17:23:14] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:23:15] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmk4zcpf70002l404mww7qju4",1,0] | Duration: 92ms[39m
+[2026-01-15 17:23:15] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmk4zcpf70002l404mww7qju4",1,0] | Duration: 92ms[39m
+[2026-01-15 17:23:18] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfax9sl0000ozys1s1xp4so","2026-01-01 00:00:00 UTC","An Nur",294,500000,"2026-01-15 10:23:17.973 UTC","2026-01-15 10:23:17.973 UTC"] | Duration: 42ms[39m
+[2026-01-15 17:23:18] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfax9sl0000ozys1s1xp4so","2026-01-01 00:00:00 UTC","An Nur",294,500000,"2026-01-15 10:23:17.973 UTC","2026-01-15 10:23:17.973 UTC"] | Duration: 42ms[39m
+[2026-01-15 17:23:18] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:23:18] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:23:43] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 21ms[39m
+[2026-01-15 17:23:43] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 21ms[39m
+[2026-01-15 17:23:43] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 21ms[39m
+[2026-01-15 17:23:43] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 21ms[39m
+[2026-01-15 17:23:43] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 21ms[39m
+[2026-01-15 17:23:43] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 21ms[39m
+[2026-01-15 17:23:51] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmk4zcpf70002l404mww7qju4",1,0] | Duration: 32ms[39m
+[2026-01-15 17:23:51] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmk4zcpf70002l404mww7qju4",1,0] | Duration: 32ms[39m
+[2026-01-15 17:23:51] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmk4zcpf70002l404mww7qju4",1,0] | Duration: 32ms[39m
+[2026-01-15 17:23:53] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:24:06] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 23ms[39m
+[2026-01-15 17:24:06] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 23ms[39m
+[2026-01-15 17:24:06] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 23ms[39m
+[2026-01-15 17:24:06] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 23ms[39m
+[2026-01-15 17:24:06] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfayaur0001ozysnhljwxez","2026-01-01 00:00:00 UTC","An Nur",353,600000,"2026-01-15 10:24:05.980 UTC","2026-01-15 10:24:05.980 UTC"] | Duration: 35ms[39m
+[2026-01-15 17:24:06] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:06] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfayaur0001ozysnhljwxez","2026-01-01 00:00:00 UTC","An Nur",353,600000,"2026-01-15 10:24:05.980 UTC","2026-01-15 10:24:05.980 UTC"] | Duration: 35ms[39m
+[2026-01-15 17:24:06] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:06] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfayaur0001ozysnhljwxez","2026-01-01 00:00:00 UTC","An Nur",353,600000,"2026-01-15 10:24:05.980 UTC","2026-01-15 10:24:05.980 UTC"] | Duration: 35ms[39m
+[2026-01-15 17:24:06] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:06] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfayaur0001ozysnhljwxez","2026-01-01 00:00:00 UTC","An Nur",353,600000,"2026-01-15 10:24:05.980 UTC","2026-01-15 10:24:05.980 UTC"] | Duration: 35ms[39m
+[2026-01-15 17:24:06] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:08] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfayckx0002ozys394zh94t","2026-01-01 00:00:00 UTC","An Nur",353,600000,"2026-01-15 10:24:08.241 UTC","2026-01-15 10:24:08.241 UTC"] | Duration: 24ms[39m
+[2026-01-15 17:24:08] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfayckx0002ozys394zh94t","2026-01-01 00:00:00 UTC","An Nur",353,600000,"2026-01-15 10:24:08.241 UTC","2026-01-15 10:24:08.241 UTC"] | Duration: 24ms[39m
+[2026-01-15 17:24:08] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfayckx0002ozys394zh94t","2026-01-01 00:00:00 UTC","An Nur",353,600000,"2026-01-15 10:24:08.241 UTC","2026-01-15 10:24:08.241 UTC"] | Duration: 24ms[39m
+[2026-01-15 17:24:08] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfayckx0002ozys394zh94t","2026-01-01 00:00:00 UTC","An Nur",353,600000,"2026-01-15 10:24:08.241 UTC","2026-01-15 10:24:08.241 UTC"] | Duration: 24ms[39m
+[2026-01-15 17:24:08] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:08] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:08] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:08] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:11] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 22ms[39m
+[2026-01-15 17:24:11] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 22ms[39m
+[2026-01-15 17:24:11] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 22ms[39m
+[2026-01-15 17:24:11] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 22ms[39m
+[2026-01-15 17:24:24] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 21ms[39m
+[2026-01-15 17:24:24] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 21ms[39m
+[2026-01-15 17:24:24] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 21ms[39m
+[2026-01-15 17:24:24] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 21ms[39m
+[2026-01-15 17:24:24] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmk4zcpf70002l404mww7qju4",1,0] | Duration: 22ms[39m
+[2026-01-15 17:24:24] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmk4zcpf70002l404mww7qju4",1,0] | Duration: 22ms[39m
+[2026-01-15 17:24:24] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmk4zcpf70002l404mww7qju4",1,0] | Duration: 22ms[39m
+[2026-01-15 17:24:24] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmk4zcpf70002l404mww7qju4",1,0] | Duration: 22ms[39m
+[2026-01-15 17:24:26] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:24:42] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 20ms[39m
+[2026-01-15 17:24:42] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 20ms[39m
+[2026-01-15 17:24:42] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 20ms[39m
+[2026-01-15 17:24:42] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 20ms[39m
+[2026-01-15 17:24:42] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfaz3020003ozysqfuuxg7y","2026-01-01 00:00:00 UTC","An Nur",294,500000,"2026-01-15 10:24:42.461 UTC","2026-01-15 10:24:42.461 UTC"] | Duration: 21ms[39m
+[2026-01-15 17:24:42] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfaz3020003ozysqfuuxg7y","2026-01-01 00:00:00 UTC","An Nur",294,500000,"2026-01-15 10:24:42.461 UTC","2026-01-15 10:24:42.461 UTC"] | Duration: 21ms[39m
+[2026-01-15 17:24:42] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfaz3020003ozysqfuuxg7y","2026-01-01 00:00:00 UTC","An Nur",294,500000,"2026-01-15 10:24:42.461 UTC","2026-01-15 10:24:42.461 UTC"] | Duration: 21ms[39m
+[2026-01-15 17:24:42] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfaz3020003ozysqfuuxg7y","2026-01-01 00:00:00 UTC","An Nur",294,500000,"2026-01-15 10:24:42.461 UTC","2026-01-15 10:24:42.461 UTC"] | Duration: 21ms[39m
+[2026-01-15 17:24:42] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:42] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:42] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:24:42] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:26:17] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:26:17] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 11ms[39m
+[2026-01-15 17:26:25] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:26:25] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezor0003oz6kyskrasxl",1,0] | Duration: 1ms[39m
+[2026-01-15 17:26:25] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezor0003oz6kyskrasxl",1,0] | Duration: 1ms[39m
+[2026-01-15 17:26:29] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfb1da60000ozxssqstg9ja","2026-01-01 00:00:00 UTC","An Nur",294,500000,"2026-01-15 10:26:29.118 UTC","2026-01-15 10:26:29.118 UTC"] | Duration: 14ms[39m
+[2026-01-15 17:26:29] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfb1da60000ozxssqstg9ja","2026-01-01 00:00:00 UTC","An Nur",294,500000,"2026-01-15 10:26:29.118 UTC","2026-01-15 10:26:29.118 UTC"] | Duration: 14ms[39m
+[2026-01-15 17:26:29] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:26:29] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:27:12] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:27:12] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:27:12] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:27:12] [34mdebug[39m: [34mQuery: SELECT "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" FROM "public"."DormRecord" WHERE 1=1 ORDER BY "public"."DormRecord"."createdAt" DESC OFFSET $1 | Params: [0] | Duration: 4ms[39m
+[2026-01-15 17:27:12] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 0ms[39m
+[2026-01-15 17:27:12] [34mdebug[39m: [34mQuery: SELECT "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" FROM "public"."DormRecord" WHERE 1=1 ORDER BY "public"."DormRecord"."createdAt" DESC OFFSET $1 | Params: [0] | Duration: 4ms[39m
+[2026-01-15 17:27:12] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 0ms[39m
+[2026-01-15 17:27:12] [34mdebug[39m: [34mQuery: SELECT "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" FROM "public"."DormRecord" WHERE 1=1 ORDER BY "public"."DormRecord"."createdAt" DESC OFFSET $1 | Params: [0] | Duration: 4ms[39m
+[2026-01-15 17:27:12] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 0ms[39m
+[2026-01-15 17:27:15] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezor0003oz6kyskrasxl",1,0] | Duration: 1ms[39m
+[2026-01-15 17:27:15] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezor0003oz6kyskrasxl",1,0] | Duration: 1ms[39m
+[2026-01-15 17:27:15] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezor0003oz6kyskrasxl",1,0] | Duration: 1ms[39m
+[2026-01-15 17:27:17] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:27:21] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezov0004oz6kba61dt09",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:21] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezov0004oz6kba61dt09",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:21] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezov0004oz6kba61dt09",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:22] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:27:24] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezop0002oz6kpw7grt74",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:24] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezop0002oz6kpw7grt74",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:24] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezop0002oz6kpw7grt74",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:26] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:27:28] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 3ms[39m
+[2026-01-15 17:27:28] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 3ms[39m
+[2026-01-15 17:27:28] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 3ms[39m
+[2026-01-15 17:27:28] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfb2n100001ozxsk98yxv4p","2026-01-01 00:00:00 UTC","Kebon Nanas",346,500000,"2026-01-15 10:27:28.400 UTC","2026-01-15 10:27:28.400 UTC"] | Duration: 0ms[39m
+[2026-01-15 17:27:28] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfb2n100001ozxsk98yxv4p","2026-01-01 00:00:00 UTC","Kebon Nanas",346,500000,"2026-01-15 10:27:28.400 UTC","2026-01-15 10:27:28.400 UTC"] | Duration: 0ms[39m
+[2026-01-15 17:27:28] [34mdebug[39m: [34mQuery: INSERT INTO "public"."DormRecord" ("id","period","dormName","totalKwh","billAmount","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" | Params: ["cmkfb2n100001ozxsk98yxv4p","2026-01-01 00:00:00 UTC","Kebon Nanas",346,500000,"2026-01-15 10:27:28.400 UTC","2026-01-15 10:27:28.400 UTC"] | Duration: 0ms[39m
+[2026-01-15 17:27:28] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:27:28] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:27:28] [31merror[39m: [31m[Prisma Error] [39m
+[31mInvalid `prisma.dormRecord.create()` invocation:[39m
+
+
+[31mNull constraint violation on the fields: (`createdBy`)[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 0ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 0ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 0ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE 1=1 ORDER BY "public"."Dorm"."name" ASC OFFSET $1 | Params: [0] | Duration: 0ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" FROM "public"."DormRecord" WHERE 1=1 ORDER BY "public"."DormRecord"."createdAt" DESC OFFSET $1 | Params: [0] | Duration: 1ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" FROM "public"."DormRecord" WHERE 1=1 ORDER BY "public"."DormRecord"."createdAt" DESC OFFSET $1 | Params: [0] | Duration: 1ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" FROM "public"."DormRecord" WHERE 1=1 ORDER BY "public"."DormRecord"."createdAt" DESC OFFSET $1 | Params: [0] | Duration: 1ms[39m
+[2026-01-15 17:27:44] [34mdebug[39m: [34mQuery: SELECT "public"."DormRecord"."id", "public"."DormRecord"."period", "public"."DormRecord"."dormName", "public"."DormRecord"."totalKwh", "public"."DormRecord"."billAmount", "public"."DormRecord"."createdBy", "public"."DormRecord"."createdAt", "public"."DormRecord"."updatedAt" FROM "public"."DormRecord" WHERE 1=1 ORDER BY "public"."DormRecord"."createdAt" DESC OFFSET $1 | Params: [0] | Duration: 1ms[39m
+[2026-01-15 17:27:47] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezov0004oz6kba61dt09",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:47] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezov0004oz6kba61dt09",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:47] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezov0004oz6kba61dt09",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:47] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezov0004oz6kba61dt09",1,0] | Duration: 0ms[39m
+[2026-01-15 17:27:49] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
+[2026-01-15 17:28:01] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:28:01] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:28:01] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:28:01] [34mdebug[39m: [34mQuery: SELECT 1 | Params: [] | Duration: 0ms[39m
+[2026-01-15 17:28:01] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezop0002oz6kpw7grt74",1,0] | Duration: 0ms[39m
+[2026-01-15 17:28:01] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezop0002oz6kpw7grt74",1,0] | Duration: 0ms[39m
+[2026-01-15 17:28:01] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezop0002oz6kpw7grt74",1,0] | Duration: 0ms[39m
+[2026-01-15 17:28:01] [34mdebug[39m: [34mQuery: SELECT "public"."Dorm"."id", "public"."Dorm"."name", "public"."Dorm"."gender"::text, "public"."Dorm"."powerCapacity", "public"."Dorm"."capacity", "public"."Dorm"."createdAt", "public"."Dorm"."updatedAt" FROM "public"."Dorm" WHERE ("public"."Dorm"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3 | Params: ["cmin3ezop0002oz6kpw7grt74",1,0] | Duration: 0ms[39m
+[2026-01-15 17:28:03] [32minfo[39m: [32m[Prisma Info] Starting a postgresql pool with 5 connections.[39m
