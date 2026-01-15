@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
         dormName: body.dormName,
         totalKwh: Number(body.totalKwh),
         billAmount: Number(body.billAmount),
-        createdBy: "dev-user", // sementara tanpa auth
+        // createdBy: "dev-user", // sementara tanpa auth
       },
     });
 
