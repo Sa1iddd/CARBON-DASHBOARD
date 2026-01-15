@@ -7,6 +7,8 @@ import { useState } from "react";
 import { CheckCircle, XCircle } from "lucide-react";
 import { useEffect } from "react";
 
+export const dynamic = "force-dynamic";
+
 export default function StudentHousingForm() {
 
   type Dorm = {
